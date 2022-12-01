@@ -12,12 +12,19 @@ pub fn day1() {
         }
     }
 
+    let mut highest = 0;
+    for c in calories.clone() {
+        if c > highest {
+            highest = c;
+        }
+    }
+
+    println!("HIGHEST: {}", highest);
+
+    // part 2
+
     calories.sort();
     calories.reverse();
-
-    println!("FIRST HIGHEST: {}", calories[0]);
-    println!("SECOND HIGHEST: {}", calories[1]);
-    println!("THIRD HIGHEST: {}", calories[2]);
 
     println!(
         "THREE HIGHEST COMBINED: {}",
