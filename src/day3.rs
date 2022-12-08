@@ -1,4 +1,4 @@
-use std::collections::{hash_map, HashMap};
+use std::collections::{HashMap};
 
 pub fn day3() {
     let lines: Vec<&str> = include_str!("day3.txt").lines().collect();
@@ -12,7 +12,7 @@ pub fn day3() {
             let mut should_break = false;
             for c_b in &vec_b {
                 if c_a == *c_b {
-                    println!("match {}", c_a);
+                    // println!("match {}", c_a);
                     sum += calc_score(&c_a);
                     should_break = true;
                     break;
@@ -27,23 +27,19 @@ pub fn day3() {
 
     let mut sum_2 = 0;
 
-    for window in lines.windows(3) {
-        println!("{}", "\nnew window!");
+    for line in lines.chunks(3) {
+        let l = line.to_vec();
+        // println!("{}", "\nnew chunk!");
         let mut group_map: HashMap<char, u8> = HashMap::new();
-        // let mut group_index = 0;
-        for w in window {
-            let string = *w;
-            // println!("{}", string);
+        for w in l {
+            let string = w;
             let mut chars: Vec<char> = string.chars().collect();
             chars.sort();
             chars.dedup();
-            let uniq: String = chars.iter().collect();
-            println!("deduped: {}", uniq);
+            // let uniq: String = chars.iter().collect();
+            // println!("deduped: {}", uniq);
             for c in chars {
                 if group_map.contains_key(&c) {
-                    // if group_map[&c] == group_index {
-                    //     continue;
-                    // }
                     if let Some(x) = group_map.get_mut(&c) {
                         *x += 1;
                     }
@@ -51,27 +47,19 @@ pub fn day3() {
                 }
                 group_map.insert(c, 0);
             }
-            // group_index += 1;
         }
 
         for kv in group_map {
             if kv.1 == 2 {
-                println!("common: {}", kv.0);
+                // println!("common: {}", kv.0);
                 sum_2 += calc_score(&kv.0);
             }
         }
-
-        // if let Some(max) = group_map.keys().max() {
-        //     println!("common: {}, amount: {}", max, group_map.get(max).unwrap());
-        //     sum_2 += calc_score(max);
-        // }
-        
     }
 
     println!("SUM 2: {}", sum_2);
 }
 
 fn calc_score(c: &char) -> u32 {
-    let is_upper = c.is_uppercase();
-    *c as u32 - if is_upper { 38 } else { 96 }
+    *c as u32 - if c.is_uppercase() { 38 } else { 96 }
 }
