@@ -35,7 +35,7 @@ pub fn day5() {
     //     println!("STACK {}: {}", i, s.iter().collect::<String>());
     // }
 
-	let mut stacks_2 = stacks_1.clone();
+    let mut stacks_2 = stacks_1.clone();
 
     for line in move_data {
         let nums = line
@@ -51,36 +51,43 @@ pub fn day5() {
         let from = split[1] - 1;
         let to = split[2] - 1;
 
-		// part 1
-		{
-			for _ in 0..split[0] {
-				let mut take_char: Option<char> = None;
-				{
-					let take = stacks_1.get_mut(from).unwrap();
-					take_char = Some(take.pop().unwrap());
-				}
-	
-				if let Some(c) = take_char {
-					let push = stacks_1.get_mut(to).unwrap();
-					push.push(c);
-				}
-			}
-		}
+        // part 1
+        {
+            for _ in 0..split[0] {
+                let mut take_char: Option<char> = None;
+                {
+                    let take = stacks_1.get_mut(from).unwrap();
+                    take_char = Some(take.pop().unwrap());
+                }
 
-		// part 2
-		{
-			let amount = split[0];
-			let take = stacks_2.get_mut(from).unwrap();
-			// dbg!(&take);
-			let mut splice = take.splice(take.len() - amount..take.len(), vec![])
-			.collect::<Vec<char>>();
-			stacks_2.get_mut(to).unwrap().append(&mut splice);
-		}
+                if let Some(c) = take_char {
+                    let push = stacks_1.get_mut(to).unwrap();
+                    push.push(c);
+                }
+            }
+        }
+
+        // part 2
+        {
+            let amount = split[0];
+            let take = stacks_2.get_mut(from).unwrap();
+            // dbg!(&take);
+            let mut splice = take
+                .splice(take.len() - amount..take.len(), vec![])
+                .collect::<Vec<char>>();
+            stacks_2.get_mut(to).unwrap().append(&mut splice);
+        }
     }
 
-    let answer_1 = stacks_1.iter().map(|s| s.last().unwrap()).collect::<String>();
+    let answer_1 = stacks_1
+        .iter()
+        .map(|s| s.last().unwrap())
+        .collect::<String>();
     println!("ANSWER 1: {}", answer_1); // should be TWSGQHNHL
 
-	let answer_2 = stacks_2.iter().map(|s| s.last().unwrap()).collect::<String>();
+    let answer_2 = stacks_2
+        .iter()
+        .map(|s| s.last().unwrap())
+        .collect::<String>();
     println!("ANSWER 2: {}", answer_2); // should be JNRSCDWPP
 }
