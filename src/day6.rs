@@ -2,18 +2,22 @@ pub fn day6() {
     let input = include_str!("day6.txt");
 
     let chars = input.chars().collect::<Vec<char>>();
-    let windows = chars.windows(4);
 
-    for (i, window) in windows.enumerate() {
+	find_marker(&chars, 4);
+	find_marker(&chars, 14);
+}
+
+fn find_marker(chars: &Vec<char>, length: usize)
+{
+	let windows_1 = chars.windows(length);
+    for (i, window) in windows_1.enumerate() {
         let mut vec = window.to_vec();
-        // println!("vec: {:?}", vec);
         vec.sort();
         vec.dedup();
-        if vec.len() != 4 {
+        if vec.len() != length {
             continue;
         }
-        // println!("first uniques: {}! {:?}", i, vec);
-        println!("answer is: {}", i + vec.len());
+        println!("answer for length {}: {}", length, i + vec.len());
         break;
     }
 }
