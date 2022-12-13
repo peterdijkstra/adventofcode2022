@@ -5,7 +5,7 @@ const CD_COMMAND: &str = "$ cd";
 const LS_COMMAND: &str = "$ ls";
 
 pub fn day7() {
-    let mut lines = include_str!("day7.txt").lines().skip(1).peekable();
+    let mut lines = include_str!("day7.txt").lines().skip(1);
 
     let root_dir = Directory::new("root".to_string());
     let root_ref = RefCell::new(root_dir);
