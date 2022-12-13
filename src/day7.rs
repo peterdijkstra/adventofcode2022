@@ -56,7 +56,16 @@ pub fn day7() {
 
     let mut sum = 0;
     calc_part_1(&root, &mut sum);
-    println!("sum: {}", sum); // 1432936
+    println!("part 1 answer: {}", sum); // 1432936
+
+	let total_space = 70000000;
+	let required_space = 30000000;
+	let current_space = total_space - r.get_total_size();
+	let missing_space= required_space - current_space;
+
+	let mut smallest = u32::MAX;
+	calc_part_2(&root, &mut smallest, missing_space);
+	println!("part 2 answer: {}", smallest); // 272298
 }
 
 fn calc_part_1(root: &Rc<RefCell<Directory>>, sum: &mut u32) {
@@ -66,6 +75,18 @@ fn calc_part_1(root: &Rc<RefCell<Directory>>, sum: &mut u32) {
     }
     for dir in borrow.directories.values() {
         calc_part_1(dir, sum);
+    }
+}
+
+fn calc_part_2(root: &Rc<RefCell<Directory>>, smallest: &mut u32, missing_space: u32)
+{
+	let borrow = root.borrow();
+	let total_size = borrow.get_total_size();
+	if total_size >= missing_space && total_size < *smallest {
+		*smallest = total_size;
+	}
+	for dir in borrow.directories.values() {
+        calc_part_2(dir, smallest, missing_space);
     }
 }
 
