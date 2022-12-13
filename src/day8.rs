@@ -49,8 +49,6 @@ pub fn day8() {
                 let t = &grid[left.y_usize()][left.x_usize()];
                 tile.borrow_mut().left = Some(Rc::clone(t));
             }
-
-            println!("{}", tile.borrow());
         }
     }
 
@@ -66,17 +64,17 @@ pub fn day8() {
 
     println!("part 1 answer: {}", part_1_answer); // 1533
 
-	let mut part_2_answer = 0;
+    let mut part_2_answer = 0;
     for row in &grid {
         for tile in row {
-			let borrow = tile.borrow();
-			if borrow.is_visible() == TileVisibility::Border {
-				continue;
-			}
+            let borrow = tile.borrow();
+            if borrow.is_visible() == TileVisibility::Border {
+                continue;
+            }
             let scenic = tile.borrow().calc_scenic();
             if scenic > part_2_answer {
-				part_2_answer = scenic;
-			}
+                part_2_answer = scenic;
+            }
         }
     }
 
@@ -192,21 +190,20 @@ impl Tile {
             }
         }
 
-		let mut scenic = 0;
+        let mut scenic = 0;
 
         for dir in Direction::iterator() {
             let mut distance = 1;
             let tile = &self.get_tile(dir).as_ref().unwrap();
             count_dist(tile.borrow(), dir, &mut distance, self.height);
             if scenic == 0 {
-				scenic = distance;
-			}
-			else {
-				scenic *= distance;
-			}
+                scenic = distance;
+            } else {
+                scenic *= distance;
+            }
         }
 
-		scenic
+        scenic
     }
 }
 
