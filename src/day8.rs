@@ -6,7 +6,7 @@ use std::{
 };
 
 pub fn day8() {
-    let mut lines = include_str!("day8.txt").lines().collect::<Vec<&str>>();
+    let lines = include_str!("day8.txt").lines().collect::<Vec<&str>>();
 
     let width = lines[0].len();
     let height = lines.len();
@@ -55,18 +55,32 @@ pub fn day8() {
     }
 
     let mut part_1_answer = 0;
-    for row in grid {
+    for row in &grid {
         for tile in row {
             let visible_check = tile.borrow().is_visible();
             if visible_check != TileVisibility::Invisible {
                 part_1_answer += 1;
-
-                // println!("tile {}", tile.borrow().coord_str());
             }
         }
     }
 
     println!("part 1 answer: {}", part_1_answer); // 1533
+
+	let mut part_2_answer = 0;
+    for row in &grid {
+        for tile in row {
+			let borrow = tile.borrow();
+			if borrow.is_visible() == TileVisibility::Border {
+				continue;
+			}
+            let scenic = tile.borrow().calc_scenic();
+            if scenic > part_2_answer {
+				part_2_answer = scenic;
+			}
+        }
+    }
+
+    println!("part 2 answer: {}", part_2_answer); // 345744
 }
 
 #[derive(Debug)]
@@ -165,6 +179,35 @@ impl Tile {
             TileVisibility::Invisible
         }
     }
+
+    fn calc_scenic(&self) -> u32 {
+        fn count_dist(tile: Ref<Tile>, dir: &Direction, distance: &mut u32, height: u32) {
+            if tile.height >= height {
+                return;
+            }
+            if let Some(t) = &tile.get_tile(dir) {
+                let tile_ref = t.as_ref();
+                *distance += 1;
+                count_dist(tile_ref.borrow(), dir, distance, height);
+            }
+        }
+
+		let mut scenic = 0;
+
+        for dir in Direction::iterator() {
+            let mut distance = 1;
+            let tile = &self.get_tile(dir).as_ref().unwrap();
+            count_dist(tile.borrow(), dir, &mut distance, self.height);
+            if scenic == 0 {
+				scenic = distance;
+			}
+			else {
+				scenic *= distance;
+			}
+        }
+
+		scenic
+    }
 }
 
 impl Display for Tile {
@@ -221,9 +264,3 @@ impl Coord {
         self.y as usize
     }
 }
-
-// impl Display for Coord {
-//     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-//         todo!()
-//     }
-// }
